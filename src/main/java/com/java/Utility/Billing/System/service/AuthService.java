@@ -35,6 +35,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Handles login, registration, JWT tokens, and password flows.
+ * Staff created by admin skip OTP — they use POST /api/users instead of register.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -51,6 +55,7 @@ public class AuthService {
     private final EmailService emailService;
     private final SecurityUtils securityUtils;
 
+    /** Public self-signup — user picks their own password and must verify email with OTP. */
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -82,6 +87,7 @@ public class AuthService {
         return buildAuthResponse(user);
     }
 
+    /** Returns JWT access + refresh tokens. Works for all roles (Admin, Finance, Operator, Customer). */
     @Transactional
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
@@ -98,6 +104,7 @@ public class AuthService {
         return buildAuthResponse(user);
     }
 
+    /** Required on first login when admin created the account with a temporary password. */
     @Transactional
     public void changePassword(ChangePasswordRequest request) {
         UserPrincipal principal = securityUtils.getCurrentUser();
@@ -118,6 +125,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.setMustChangePassword(false);
         userRepository.save(user);
+        // Force re-login on all devices after a password change
         refreshTokenRepository.deleteByUser(user);
 
         log.info("Password changed for: {}", user.getEmail());

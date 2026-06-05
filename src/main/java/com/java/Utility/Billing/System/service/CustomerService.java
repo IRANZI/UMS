@@ -19,6 +19,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Customer CRUD — stores billing profile (name, national ID, email, phone, address, status).
+ * Link a userId so the customer can log in and view their own bills.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -124,6 +128,7 @@ public class CustomerService {
         });
     }
 
+    // Optional — connects this customer record to a login account (ROLE_CUSTOMER)
     private User resolveUser(Long userId) {
         if (userId == null) {
             return null;
