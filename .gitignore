@@ -30,7 +30,8 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
 
 ### Local secrets ###
 src/main/resources/application-local.properties
+config.bat
+node_modules
