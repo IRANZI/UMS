@@ -1,0 +1,10 @@
+# =============================================================================
+# Copy to: application-local.properties
+# Gmail App Password: https://myaccount.google.com/apppasswords (2-Step Verification required)
+# After editing: RESTART the Spring Boot app (changes are not hot-reloaded)
+# =============================================================================
+
+spring.mail.username=your-gmail@gmail.com
+spring.mail.password=your16charapppassword
+app.mail.from=your-gmail@gmail.com
+app.mail.enabled=true
